@@ -214,9 +214,9 @@ class SaveDriveFilesToLibrary extends Component {
           onEvent={this.handleEvent}
           exportAsBlobs={false}
         >
-          <button className="">Select Drive Files To Copy</button>
+          <button className=library-copy__select-btn"">Select Drive Files To Copy</button>
         </Drive>
-        {loading && <div className="loader" />}
+        {loading && <div className="library-copy__loader" />}
       </div>
     );
   }
@@ -259,9 +259,9 @@ class SaveDriveFilesToLibrary extends Component {
           apiKey="apiKey"
           onEvent={this.handleEvent}
         >
-          <button className="">Select Drive Files</button>
+          <button className="library-copy__select-btn">Select Drive Files</button>
         </Drive>
-        {loading && <div className="loader" />}
+        {loading && <div className="library-copy__loader" />}
         {files.length && files.map(file => <p>{file.name}</p>)}
       </div>
     );
