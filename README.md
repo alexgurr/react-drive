@@ -1,68 +1,191 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h1 align="center">Welcome to react-drive 👋</h1>
+<p>
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://twitter.com/alexgurr" target="_blank">
+    <img alt="Twitter: alexgurr" src="https://img.shields.io/twitter/follow/alexgurr.svg?style=social" />
+  </a>
+</p>
 
-## Available Scripts
+> An all-in-one react wrapper around Google's drive file picker. Supports direct downloads & blob exports.
 
-In the project directory, you can run:
+### 🏠 [Homepage](https://github.com/alexgurr/react-drive)
 
-### `yarn start`
+## Install
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```sh
+yarn add react-drive
+```
+or
+```sh
+npm install react-drive
+```
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
 
-### `yarn test`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## About
 
-### `yarn build`
+- Scripts are lazy loaded when the component is initially rendered.
+- When the trigger is clicked we prompt the user to authenticate if a session is not already present.
+- The file picker is shown
+- Selected files can either be directly downloaded to the user's device, saved in memory as blobs or returned as drive file references
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Prerequisites
 
-### `yarn eject`
+You'll need two things from the google developers console. A `client id` and an `api key`. To get these you'll need a `project` with the **Google Picker API** enabled. Once you've created a new project and selected it:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+[console.developers.google.com](https://[console.developers.google.com]()) > Dashboard > + ENABLE APIS AND SERVICES > Google Picker API > Enable
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+------
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+[console.developers.google.com](https://[console.developers.google.com]()) > Credentials > Create Credentials > OAuth Client 
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+*Part of this will be to create a consent screen. If you just want to test in development, you don't need to submit. Simple save and go back.*
 
-## Learn More
+------
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+[console.developers.google.com](https://[console.developers.google.com]()) > Credentials > Create Credentials > API Key
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+## Options
 
-### Analyzing the Bundle Size
+### children `node` **(required)**
+A react element/node to handle the triggering of the picker. Use the [`injectOnClick`](#injectonclick-boolean) prop to determine how the trigger is made clickable.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
 
-### Making a Progressive Web App
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+### clientId `string` (required)
 
-### Advanced Configuration
+The client id you created above.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
 
-### Deployment
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+### apiKey `string` (required)
 
-### `yarn build` fails to minify
+The API key you created above.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+
+### onEvent `function(event, payload?)` (required)
+
+The `onEvent` callback is called multiple times during the picker lifecycle. The first argument is always the event type and the second argument is an optional payload that's included with certain events (see below). You can handle as many of the events below in your callback function as you need.
+
+*We provide the user's access key as part of the payload, in case you want to handle file downloading server side and don't want to have to go through the authentication flow again.*
+
+##### Events
+
+`CANCEL` - When the user cancels/closes the picker without selecting any files
+
+------
+
+`ERROR` - When the picker throws an error
+
+------
+
+`START_REMOTE_PULL` - **Only called when** [`exportAsBlobs`](#exportasblobs-boolean) **is set to *true***. Will fire just before we start pulling individual files from drive.
+
+------
+
+`SELECTED_FILE` - **Only called when** [`exportAsBlobs`](#exportasblobs-boolean) **is set to *true***. Will get fired everytime a blob is resolved from drive.
+
+Payload is ```{ accessToken: string, file: blob }```
+
+------
+
+`SELECTED_FILES` - The final event, called when all files are resolved. If  [`exportAsBlobs`](#exportasblobs-boolean) is set to **false**, the files will be an array of `drive doc objects`,  otherwise an array of `blobs`.
+
+Payload is ```{ accessToken: string, files: [blob | doc] }```
+
+
+
+### exportMimeTypesOverrides `object`
+
+In Google Drive, files are handled differently depending on whether they are a `Google Document` or an actual file. Direct files are downloaded as you would expect, with a **preserved mime type**.
+
+Google Documents have to be mapped to mime types when they are exported. `react-drive` provides some sensible defaults but all of them are overridable. You can see the supported export mime types [here](https://developers.google.com/drive/api/v3/ref-export-formats).
+
+```javascript
+{
+  document: `string` (default: application/pdf),
+  drawing: `string` (default: image/png),
+  presentation: `string` (default: application/pdf),
+  script: `string` (default: application/vnd.google-apps.script+json),
+  spreadsheet: `string` (default: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet)
+}
+```
+
+
+
+### origin `string`
+
+Sets the origin of picker dialog. The origin should be set to the `window.location.protocol + '//' + window.location.host` of the top-most page, if your application is running in an iframe.
+
+
+
+### multiSelect `boolean`
+
+ `default: true`
+
+Allow the user to select more than one file.
+
+
+
+### exportAsBlobs `boolean`
+
+ `default: true`
+
+Should `react-files` download the selected files to the browser as blobs.
+
+
+
+### injectOnClick `boolean`
+
+ `default: true`
+
+Should `react-files` inject the `onClick` event handler directly in the provided child. Fallback is a wrapper container with the handler.
+
+
+
+### downloadSelectedFiles `boolean`
+
+ `default: false`
+
+Download the selected files automatically to the user's machine after the picker closes
+
+
+### allowSharedDrives `boolean`
+
+ `default: true`
+
+Allow the user to browse shared drives to select files from.
+
+
+### allowedMimeTypes `[string]`
+
+An array of allow mime types, to restrict the files a user can select in the picker.
+
+​                                                                                                                                                           
+
+## Author
+
+👤 **Alex Gurr**
+
+* Website: https://www.alexgurr.com
+
+* Twitter: [@alexgurr](https://twitter.com/alexgurr)
+
+* Github: [@alexgurr](https://github.com/alexgurr)
+
+  
+
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!<br />Feel free to check the [issues page](https://github.com/alexgurr/react-drive/issues). 
+
+
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
