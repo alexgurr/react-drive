@@ -172,6 +172,108 @@ An array of allow mime types, to restrict the files a user can select in the pic
 <br />
 <br />
 
+## Examples
+
+#### Server Side Handling
+
+```react
+import Drive from 'react-drive';
+import copyDriveFilesToUserLib from './api/copyDriveFilesToUserLib';
+
+class SaveDriveFilesToLibrary extends Component {
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      loading: false
+    };
+  }
+  
+  doServerCopy = async ({ accessToken, files: docs }) => {
+    this.setState({ loading: true });
+
+    await copyDriveFilesToUserLib({ accessToken, docs });
+    
+    this.setState({ loading: false });
+  }
+  
+  handleEvent = (event, payload) => {
+    if (event !== 'SELECTED_FILES') { return; }
+    
+    this.doServerCopy(payload);
+  } 
+  
+  render() {
+    const { loading } = this.state;
+    
+    return (
+      <div className="library-copy">
+        <Drive
+          clientId="clientId"
+          apiKey="apiKey"
+          onEvent={this.handleEvent}
+          exportAsBlobs={false}
+        >
+          <button className="">Select Drive Files To Copy</button>
+        </Drive>
+        {loading && <div className="loader" />}
+      </div>
+    );
+  }
+}
+```
+
+#### Local Blob Handling
+
+```react
+import Drive from 'react-drive';
+import copyDriveFilesToUserLib from './api/copyDriveFilesToUserLib';
+
+class SaveDriveFilesToLibrary extends Component {
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      files: [],
+      loading: false
+    };
+  }
+  
+  handleEvent = (event, payload) => {
+    if (event === 'START_REMOTE_PULL') {
+      return void this.setState({ loading: true });
+    }
+    
+    if (event === 'SELECTED_FILES') {
+      this.setState({ files: payload.files });
+    }
+  } 
+  
+  render() {
+    const { loading, files } = this.state;
+    
+    return (
+      <div className="library-copy">
+        <Drive
+          clientId="clientId"
+          apiKey="apiKey"
+          onEvent={this.handleEvent}
+        >
+          <button className="">Select Drive Files</button>
+        </Drive>
+        {loading && <div className="loader" />}
+        {files.length && files.map(file => <p>{file.name}</p>)}
+      </div>
+    );
+  }
+}
+```
+
+
+
+<br />
+<br />
+
 ## Author
 
 👤 **Alex Gurr**
