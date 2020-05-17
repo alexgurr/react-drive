@@ -29,6 +29,7 @@
   },
   "scripts": {
     "build": "babel src --out-dir dist",
+    "prepublishOnly": "yarn build",
     "lint": "eslint src --cache"
   }
 }
