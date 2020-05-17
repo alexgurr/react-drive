@@ -19,8 +19,8 @@ or
 ```sh
 npm install react-drive
 ```
-
-
+<br />
+<br />
 
 ## About
 
@@ -28,8 +28,8 @@ npm install react-drive
 - When the trigger is clicked we prompt the user to authenticate if a session is not already present.
 - The file picker is shown
 - Selected files can either be directly downloaded to the user's device, saved in memory as blobs or returned as drive file references
-
-
+<br />
+<br />
 
 ## Prerequisites
 
@@ -46,33 +46,35 @@ You'll need two things from the google developers console. A `client id` and an 
 ------
 
 [console.developers.google.com](https://[console.developers.google.com]()) > Credentials > Create Credentials > API Key
-
-
+<br />
+<br />
 
 ## Options
 
 ### children `node` **(required)**
 A react element/node to handle the triggering of the picker. Use the [`injectOnClick`](#injectonclick-boolean) prop to determine how the trigger is made clickable.
-
-
+<br />
+<br />
 
 ### clientId `string` (required)
 
 The client id you created above.
-
-
+<br />
+<br />
 
 ### apiKey `string` (required)
 
 The API key you created above.
-
-
+<br />
+<br />
 
 ### onEvent `function(event, payload?)` (required)
 
 The `onEvent` callback is called multiple times during the picker lifecycle. The first argument is always the event type and the second argument is an optional payload that's included with certain events (see below). You can handle as many of the events below in your callback function as you need.
 
 *We provide the user's access key as part of the payload, in case you want to handle file downloading server side and don't want to have to go through the authentication flow again.*
+<br />
+<br />
 
 ##### Events
 
@@ -97,8 +99,8 @@ Payload is ```{ accessToken: string, file: blob }```
 `SELECTED_FILES` - The final event, called when all files are resolved. If  [`exportAsBlobs`](#exportasblobs-boolean) is set to **false**, the files will be an array of `drive doc objects`,  otherwise an array of `blobs`.
 
 Payload is ```{ accessToken: string, files: [blob | doc] }```
-
-
+<br />
+<br />
 
 ### exportMimeTypesOverrides `object`
 
@@ -115,58 +117,60 @@ Google Documents have to be mapped to mime types when they are exported. `react-
   spreadsheet: `string` (default: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet)
 }
 ```
-
-
+<br />
+<br />
 
 ### origin `string`
 
 Sets the origin of picker dialog. The origin should be set to the `window.location.protocol + '//' + window.location.host` of the top-most page, if your application is running in an iframe.
-
-
+<br />
+<br />
 
 ### multiSelect `boolean`
 
  `default: true`
 
 Allow the user to select more than one file.
-
-
+<br />
+<br />
 
 ### exportAsBlobs `boolean`
 
  `default: true`
 
 Should `react-files` download the selected files to the browser as blobs.
-
-
+<br />
+<br />
 
 ### injectOnClick `boolean`
 
  `default: true`
 
 Should `react-files` inject the `onClick` event handler directly in the provided child. Fallback is a wrapper container with the handler.
-
-
+<br />
+<br />
 
 ### downloadSelectedFiles `boolean`
 
  `default: false`
 
 Download the selected files automatically to the user's machine after the picker closes
-
+<br />
+<br />
 
 ### allowSharedDrives `boolean`
 
  `default: true`
 
 Allow the user to browse shared drives to select files from.
-
+<br />
+<br />
 
 ### allowedMimeTypes `[string]`
 
 An array of allow mime types, to restrict the files a user can select in the picker.
-
-​                                                                                                                                                           
+<br />
+<br />
 
 ## Author
 
@@ -177,14 +181,13 @@ An array of allow mime types, to restrict the files a user can select in the pic
 * Twitter: [@alexgurr](https://twitter.com/alexgurr)
 
 * Github: [@alexgurr](https://github.com/alexgurr)
-
-  
+<br />
 
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check the [issues page](https://github.com/alexgurr/react-drive/issues). 
-
-
+<br />
+<br />
 
 ## Show your support
 
