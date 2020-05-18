@@ -1,6 +1,8 @@
 <h1 align="center">Welcome to react-drive 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://www.npmjs.com/package/react-drive" target="_blank">
+    <img alt="npm: react-drive" src="https://img.shields.io/npm/v/react-drive" />
+  </a>
   <a href="https://twitter.com/alexgurr" target="_blank">
     <img alt="Twitter: alexgurr" src="https://img.shields.io/twitter/follow/alexgurr.svg?style=social" />
   </a>
