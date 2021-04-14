@@ -180,7 +180,9 @@ An array of allow mime types, to restrict the files a user can select in the pic
 
 ```react
 import Drive from 'react-drive';
-import copyDriveFilesToUserLib from './api/copyDriveFilesToUserLib';
+
+// This could be a file that sends an api request and uses the G drive node SDK to copy/stream files server-side
+import exampleFileToTriggerServerCopy from './api/exampleFileToTriggerServerCopy';
 
 class SaveDriveFilesToLibrary extends Component {
   constructor(props) {
@@ -193,8 +195,8 @@ class SaveDriveFilesToLibrary extends Component {
   
   doServerCopy = async ({ accessToken, files: docs }) => {
     this.setState({ loading: true });
-
-    await copyDriveFilesToUserLib({ accessToken, docs });
+    
+    await exampleFileToTriggerServerCopy({ accessToken, docs });
     
     this.setState({ loading: false });
   }
@@ -229,7 +231,6 @@ class SaveDriveFilesToLibrary extends Component {
 
 ```react
 import Drive from 'react-drive';
-import copyDriveFilesToUserLib from './api/copyDriveFilesToUserLib';
 
 class SaveDriveFilesToLibrary extends Component {
   constructor(props) {
